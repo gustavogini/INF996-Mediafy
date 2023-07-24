@@ -1,0 +1,62 @@
+﻿<Window x:Class="MediaFy.View.MediaPlayer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaFy.View"
+        mc:Ignorable="d"
+        Title="AudioFy" Height="400" MinHeight="350" Width="350" MinWidth="350" MaxWidth="350" Closing="Window_Closing" Topmost="True">
+    <Grid>
+
+
+        <Button Content="{Binding PlayText}" Command="{Binding ChangePlay}" Margin="130,316,0,0" FontSize="24" Height="38" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90"/>
+        <Button Content="Próxima" Command="{Binding NewMusic}" CommandParameter="Next" Margin="225,320,0,0" FontSize="15" Height="30" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75"/>
+        <Button Content="Anterior" Command="{Binding NewMusic}" CommandParameter="Previous" Margin="50
+                ,320,0,0" FontSize="15" Height="30" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left" Width="76"/>
+
+        <CheckBox Content="Aleatório" IsChecked="{Binding IsShuffle, Mode=OneWayToSource}" Margin="20,360,0,0" Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.ColumnSpan="2" />
+        <Slider x:Name="volumeSlider" Value="0.5" HorizontalAlignment="Left" Margin="100,290,0,0" VerticalAlignment="Top" Width="158" Maximum="1" ValueChanged="Volume_Changed" ToolTip="Volume"/>
+
+        <ListView x:Name="filesListView" SelectedIndex="{Binding PlayIndex, Mode=OneWay}" Margin="10,20,10,105" ItemsSource="{Binding FileInfo, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" SelectionMode="Single">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsPlaying}" Value="true">
+                            <Setter Property="Background" Value="LightBlue"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsPlaying}" Value="false">
+                            <Setter Property="Background" Value="White"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="60" DisplayMemberBinding="{Binding MediaType}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader CommandParameter="Media" Command="{Binding SortView}">Media</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="190" DisplayMemberBinding="{Binding FileName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader CommandParameter="FileName" Command="{Binding SortView}">Name</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="56" DisplayMemberBinding="{Binding DurationString}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader CommandParameter="Duration" Command="{Binding SortView}" >Duration</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Label Content="{Binding TotalDuration, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0 ,2" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+
+        <MediaElement x:Name="mediaElement" Source="{Binding AudioSource}"  UnloadedBehavior="Manual" HorizontalAlignment="Left" Height="38" Margin="10,387,0,0" VerticalAlignment="Top" Width="327" Grid.ColumnSpan="2" LoadedBehavior="Manual" MediaEnded="Media_Ended"/>
+    </Grid>
+</Window>
